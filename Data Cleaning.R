@@ -26,8 +26,23 @@ unique(data_frame$FuelType)
 #Changing numeric strings into numeric
 data_frame$kmDriven = gsub(",", "", data_frame$kmDriven)
 data_frame$kmDriven = sub("km", "", data_frame$kmDriven)
-data_frame$kmDriven = as.numeric(data_frame$kmDriven)
+data_frame$kmDriven = as.integer(data_frame$kmDriven)
+
 data_frame$AskPrice = gsub(",", "", data_frame$AskPrice)
 data_frame$AskPrice = sub("₹", "", data_frame$AskPrice)
-data_frame$AskPrice = as.numeric(data_frame$AskPrice)
+data_frame$AskPrice = as.integer(data_frame$AskPrice)
 
+#Fixing numeric data outliers problem
+boxplot(data_frame$kmDriven)
+kmDriven.Q1 <- quantile(data_frame$kmDriven, 0.25, na.rm = TRUE)
+kmDriven.Q3 <- quantile(data_frame$kmDriven, 0.75, na.rm = TRUE)
+kmDriven.IQR <- IQR(data_frame$kmDriven, na.rm = TRUE)
+data_frame$kmDriven[data_frame$kmDriven < kmDriven.Q1 - 1.5*kmDriven.IQR] = kmDriven.Q1 - 1.5*kmDriven.IQR
+data_frame$kmDriven[data_frame$kmDriven > kmDriven.Q3 + 1.5*kmDriven.IQR] = kmDriven.Q3 + 1.5*kmDriven.IQR
+
+boxplot(data_frame$AskPrice)
+AskPrice.Q1 <- quantile(data_frame$AskPrice, 0.25, na.rm = TRUE)
+AskPrice.Q3 <- quantile(data_frame$AskPrice, 0.75, na.rm = TRUE)
+AskPrice.IQR <- IQR(data_frame$AskPrice, na.rm = TRUE)
+data_frame$AskPrice[data_frame$AskPrice < AskPrice.Q1 - 1.5*AskPrice.IQR] = AskPrice.Q1 - 1.5*AskPrice.IQR
+data_frame$AskPrice[data_frame$AskPrice > AskPrice.Q3 + 1.5*AskPrice.IQR] = AskPrice.Q3 + 1.5*AskPrice.IQR
