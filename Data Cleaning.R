@@ -7,7 +7,7 @@ sum(is.na(data_frame))
 
 #Changing PostedDate column into date format for later analysis
 data_frame$PostedDate <- paste0(data_frame$PostedDate, "-15")
-data_frame$PostedDate <- as.Date(strptime(data_frame$PostedDate, format="%b-%y-%d"))
+data_frame$PostedDate <- as.Date(strptime(data_frame$PostedDate, format="%m-%y-%d"))
 
 #Extracting year from PostedDate
 data_frame$PostedYear <- as.integer(format(data_frame$PostedDate, "%Y"))
@@ -46,3 +46,4 @@ AskPrice.Q3 <- quantile(data_frame$AskPrice, 0.75, na.rm = TRUE)
 AskPrice.IQR <- IQR(data_frame$AskPrice, na.rm = TRUE)
 data_frame$AskPrice[data_frame$AskPrice < AskPrice.Q1 - 1.5*AskPrice.IQR] = AskPrice.Q1 - 1.5*AskPrice.IQR
 data_frame$AskPrice[data_frame$AskPrice > AskPrice.Q3 + 1.5*AskPrice.IQR] = AskPrice.Q3 + 1.5*AskPrice.IQR
+
