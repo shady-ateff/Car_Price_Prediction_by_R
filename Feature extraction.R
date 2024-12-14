@@ -4,6 +4,9 @@ data_frame$isLuxury <- as.numeric(as.factor(data_frame$Brand %in% luxury_brands)
 
 data_frame$kmPerYear <- data_frame$kmDriven / data_frame$Age
 
+min(data_frame$PostedDate)
+data_frame$PostedMonths <- (as.integer(format(data_frame$PostedDate, "%Y")) - 2023)*12 + (as.integer(format(data_frame$PostedDate, "%m")) - 11)
+
 data_frame$AdditionInfo <- NULL
 data_frame$PostedDate<-NULL
 data_frame$PostedYear<-NULL
