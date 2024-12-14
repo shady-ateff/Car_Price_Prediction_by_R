@@ -1,20 +1,14 @@
-
+#We diffrentiate between luxurious and regular brands
 luxury_brands <- c("BMW", "Mercedes-Benz", "Audi","Tesla","Porsche","Volvo","Lexus","Ferrari", "Lamborghini","Aston Martin","Bentley","Ford","Rolls-Royce" ,"Land Rover")
 data_frame$isLuxury <- as.numeric(as.factor(data_frame$Brand %in% luxury_brands))
 
+#We extract how many Km were driven per year
 data_frame$kmPerYear <- data_frame$kmDriven / data_frame$Age
 
+#We derive months since 1 month before earliest date from posted date
+#to provide useful integer data for models
 min(data_frame$PostedDate)
 data_frame$PostedMonths <- (as.integer(format(data_frame$PostedDate, "%Y")) - 2023)*12 + (as.integer(format(data_frame$PostedDate, "%m")) - 11)
 
-data_frame$AdditionInfo <- NULL
-data_frame$PostedDate<-NULL
-data_frame$PostedYear<-NULL
-data_frame$Year<-NULL
-
+#We combine bith brand and model into 1 feature
 data_frame$Brand.model <-as.numeric(as.factor(paste0(data_frame$Brand,"-",data_frame$model)))
-data_frame$Brand<-NULL
-data_frame$model<-NULL
-data_frame$Transmission<-as.numeric(as.factor(data_frame$Transmission))
-data_frame$Owner<-as.numeric(as.factor(data_frame$Owner))
-data_frame$FuelType<-as.numeric(as.factor(data_frame$FuelType))
