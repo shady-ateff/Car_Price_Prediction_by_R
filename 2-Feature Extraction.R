@@ -4,6 +4,8 @@ data_frame$isLuxury <- as.numeric(as.factor(data_frame$Brand %in% luxury_brands)
 
 #We extract how many Km were driven per year
 data_frame$kmPerYear <- data_frame$kmDriven / data_frame$Age
+data_frame$kmPerYear[is.na(data_frame$kmPerYear)] <- 0
+data_frame$kmPerYear[is.infinite(data_frame$kmPerYear)] <- data_frame$kmDriven[is.infinite(data_frame$kmPerYear)]
 
 #We derive months since 1 month before earliest date from posted date
 #to provide useful integer data for models
