@@ -1,20 +1,27 @@
 
-luxury_brands <- c("BMW", "Mercedes-Benz", "Audi","Tesla","Porsche","Volvo","Lexus","Ferrari", "Lamborghini","Aston Martin","Bentley","Ford","Rolls-Royce" ,"Land Rover")
-data_frame$isLuxury <- as.numeric(as.factor(data_frame$Brand %in% luxury_brands))
+library(dplyr)
 
-data_frame$kmPerYear <- data_frame$kmDriven / data_frame$Age
+# Load cleaned dataset
+data_frame <- read.csv("cleaned_data.csv")
+head(data_frame)
+str(data_frame)
+# Define luxury brands
+luxury_brands <- c("BMW", "Mercedes-Benz", "Audi", "Tesla", "Porsche", "Volvo", 
+                   "Lexus", "Ferrari", "Lamborghini", "Aston Martin", "Bentley", 
+                   "Ford", "Rolls-Royce", "Land Rover")
 
-min(data_frame$PostedDate)
-data_frame$PostedMonths <- (as.integer(format(data_frame$PostedDate, "%Y")) - 2023)*12 + (as.integer(format(data_frame$PostedDate, "%m")) - 11)
-
-data_frame$AdditionInfo <- NULL
-data_frame$PostedDate<-NULL
-data_frame$PostedYear<-NULL
-data_frame$Year<-NULL
-
-data_frame$Brand.model <-as.numeric(as.factor(paste0(data_frame$Brand,"-",data_frame$model)))
-data_frame$Brand<-NULL
-data_frame$model<-NULL
-data_frame$Transmission<-as.numeric(as.factor(data_frame$Transmission))
-data_frame$Owner<-as.numeric(as.factor(data_frame$Owner))
-data_frame$FuelType<-as.numeric(as.factor(data_frame$FuelType))
+# Feature engineering
+data_frame <- data_frame %>%
+  mutate(
+    isLuxury = as.numeric(Brand %in% luxury_brands),
+    kmPerYear = kmDriven / Age,
+    Brand_model = as.numeric(as.factor(paste(Brand, model))),
+    Transmission = as.numeric(as.factor(Transmission)),
+    Owner = as.numeric(as.factor(Owner)),
+    FuelType = as.numeric(as.factor(FuelType))
+  ) %>%
+  select(-c(Brand, model, PostedDate, PostedYear, Year))
+head(data_frame)
+str(data_frame)
+# Save data with features
+write.csv(data_frame, "feature_extraction_data.csv", row.names=FALSE)
