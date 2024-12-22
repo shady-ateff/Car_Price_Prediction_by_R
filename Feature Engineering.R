@@ -27,6 +27,7 @@ encoded_data <- subset(encoded_data, select = -c(Year, PostedDate, AdditionInfo,
 encoded_data$LogkmPerYear = ifelse(encoded_data$kmPerYear == 0,0,log(encoded_data$kmPerYear))
 encoded_data$LogAskPrice = ifelse(encoded_data$AskPrice==0,0,log(encoded_data$AskPrice))
 
+
 #We now look at the correlation with log ask price
 encoded_data$kmPerYear <- NULL
 encoded_data$AskPrice <- NULL

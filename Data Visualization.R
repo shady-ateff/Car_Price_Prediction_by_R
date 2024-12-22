@@ -41,4 +41,3 @@ par(mfrow=c(1,1))
 #correlations <- sapply(encoded_data, function(col) cor(col, encoded_data$AskPrice, use="pairwise.complete.obs"))
 correlations <- abs(correlations[names(correlations) != "AskPrice"])
 barplot(correlations, main = "Absolute Correlation of Each Column with AskPrice",ylab = "Correlation Coefficient",col = "skyblue", las = 2, cex.names = 0.7)
-
