@@ -1,10 +1,9 @@
-
+Sys.setlocale("LC_TIME", "C")  # Set to English for date parsing"convert NOV -> 11"
+#Load data set and view its structure
+data_frame <- read.csv("used_car_dataset.csv",na.strings="")
+str(data_frame)
 library(dplyr)
 
-# Load the dataset
-data_frame <- read.csv("used_car_dataset.csv", na.strings="")
-head(data_frame)
-str(data_frame)
 # Data cleaning
 data_frame <- na.omit(data_frame)  
 
@@ -14,6 +13,11 @@ data_frame <- unique(data_frame)
 # Remove unnecessary columns
 data_frame <- data_frame %>%
   select(-c(AdditionInfo))  
+
+#Changing PostedDate column into date format for later analysis
+Sys.setlocale("LC_TIME", "C")  # Set to English for date parsing"convert NOV -> 11"
+data_frame$PostedDate <- paste0(data_frame$PostedDate, "-15")
+data_frame$PostedDate <- as.Date(strptime(data_frame$PostedDate, format="%b-%y-%d"))
 
 # Fix numeric columns
 data_frame$kmDriven <- as.numeric(gsub(",", "", sub(" km", "", data_frame$kmDriven)))
