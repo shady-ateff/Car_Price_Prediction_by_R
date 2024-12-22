@@ -1,3 +1,4 @@
+Sys.setlocale("LC_TIME", "C")  # Set to English for date parsing"convert NOV -> 11"
 #Load data set and view its structure
 data_frame <- read.csv("used_car_dataset.csv",na.strings="")
 str(data_frame)
@@ -52,6 +53,3 @@ boxplot(data_frame$AskPrice)
 AskPrice.Q1 <- quantile(data_frame$AskPrice, 0.25)
 AskPrice.IQR <- IQR(data_frame$AskPrice)
 data_frame$AskPrice[data_frame$AskPrice < AskPrice.Q1 - 1.5*AskPrice.IQR] = AskPrice.Q1 - 1.5*AskPrice.IQR
-
-#Log transformation for ask price to reduce high outliers impact
-data_frame$LogAskPrice = log(data_frame$AskPrice)
