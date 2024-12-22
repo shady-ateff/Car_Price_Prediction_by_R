@@ -1,28 +1,21 @@
-install.packages("corrplot")
-install.packages("pheatmap")
-install.packages("caret")
-library(caret)
-dummies <- dummyVars(~., data = data_frame)
 
-# Predict the dummy variables and bind them to the original dataset
-data_frame_encoded <- predict(dummies, newdata = data_frame)
+library(ggplot2)
+library(corrplot)
 
-# Convert the result to a data frame
-data_frame_encoded <- as.data.frame(data_frame_encoded)
+# Load  featured dataset
+data_frame <- read.csv("feature_extraction_data.csv")
 
-plot(data_frame)
+# 1. Distribution of AskPrice
+ggplot(data_frame, aes(x=AskPrice)) +
+  geom_histogram(bins=30, fill="blue", alpha=0.7) +
+  labs(title="Distribution of Ask Price", x="Ask Price", y="Frequency")
 
-boxplot(data_frame$kmDriven ,data_frame$AskPrice ,data_frame$Age)
+# 2. Scatter plot of kmDriven vs AskPrice
+ggplot(data_frame, aes(x=kmDriven, y=AskPrice, color=factor(isLuxury))) +
+  geom_point(alpha=0.7) +
+  labs(title="kmDriven vs AskPrice", x="kmDriven", y="Ask Price") +
+  theme_minimal()
 
-plot(data_frame$kmDriven ,data_frame$AskPrice ,data_frame$Age)
-
-hist(data_frame$AskPrice/100000,breaks = 1550)
-
-par(mfcol=c(2,3))
-
-
-correlation_matrix <- cor(data_frame[-8], use = "complete.obs") # `use = "complete.obs"` ignores NA
-heatmap(correlation_matrix, 
-        col = colorRampPalette(c("blue", "white", "red"))(20), 
-        scale = "none", 
-        main = "Correlation Matrix")
+# 3. Correlation matrix
+cor_matrix <- cor(data_frame %>% select(-AskPrice))
+corrplot(cor_matrix, method="circle")

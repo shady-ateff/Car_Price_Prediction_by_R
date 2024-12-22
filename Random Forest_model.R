@@ -1,5 +1,17 @@
 install.packages("randomForest")
+library(dplyr)
 library(randomForest)
+library(caret)
+
+# Load  featured dataset
+data_frame <- read.csv("feature_extraction_data.csv")
+
+# Replace Inf values with the column mean
+data_frame[] <- lapply(data_frame, function(x) {
+  x[is.infinite(x)] <- mean(x[!is.infinite(x)], na.rm = TRUE)
+  return(x)
+})
+
 # Step 1: Train-Test Split
 set.seed(123)
 n <- nrow(data_frame)
@@ -8,8 +20,8 @@ train_data <- data_frame[train_indices, ]
 test_data <- data_frame[-train_indices, ]
 
 # Step 2: Train Random Forest Model
-sum(is.na(data_frame))
-rf_model <- randomForest(AskPrice ~ ., data = train_data, ntree = 100)
+
+rf_model <- randomForest(AskPrice ~ ., data = train_data, ntree = 300,mtry=3)
 
 # Step 3: Make Predictions
 
@@ -21,6 +33,9 @@ evaluate <- function(actual, predicted) {
   mae <- mean(abs(actual - predicted))  # Mean Absolute Error
   mse <- mean((actual - predicted)^2)  # Mean Squared Error
   r2 <- cor(actual, predicted)^2       # Coefficient of Determination (R²)
+  mae <- format(mae, scientific = FALSE, digits = 2)
+  mse <- format(mse, scientific = FALSE, digits = 2)
+  r2 <- format(r2, scientific = FALSE, digits = 3)
   return(c(MAE = mae, MSE = mse, R2 = r2))
 }
 
@@ -31,7 +46,10 @@ actual_values <- test_data$AskPrice
 rf_metrics <- evaluate(actual_values, predictions_rf)
 
 cat("\nRandom Forest Evaluation Metrics:\n")
-print(rf_metrics)
+
+cat("MAE: ", rf_metrics["MAE"], "\n")
+cat("MSE: ", rf_metrics["MSE"], "\n")
+cat("R²: ", rf_metrics["R2"], "\n")
 
 # Accuracy Calculation (using MAPE)
 calculate_accuracy <- function(actual, predicted) {
@@ -59,4 +77,10 @@ plot(predictions_rf, residuals_rf,
      xlab = "Predicted Prices", ylab = "Residuals",
      col = "green", pch = 16)
 abline(h = 0, col = "red", lwd = 2)  # Reference line at residual = 0
+
+# Step 6: Check Actual vs Predicted Values
+comparison_df <- data.frame(Actual = actual_values, Predicted = predictions_rf)
+cat("\nComparison of Actual vs Predicted Values:\n")
+print(head(comparison_df))  # Show the first few rows of the comparison
+
 
