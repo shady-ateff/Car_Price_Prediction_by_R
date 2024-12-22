@@ -24,8 +24,9 @@ encoded_data <- subset(encoded_data, select = -c(Year, PostedDate, AdditionInfo,
 
 #After Completing Visualization Step:
 #We apply log transormation on km per Year and Ask Price
-encoded_data$LogkmPerYear = log(encoded_data$kmPerYear)
-encoded_data$LogAskPrice = log(encoded_data$AskPrice)
+encoded_data$LogkmPerYear = ifelse(encoded_data$kmPerYear == 0,0,log(encoded_data$kmPerYear))
+encoded_data$LogAskPrice = ifelse(encoded_data$AskPrice==0,0,log(encoded_data$AskPrice))
+
 
 #We now look at the correlation with log ask price
 encoded_data$kmPerYear <- NULL
