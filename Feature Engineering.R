@@ -16,7 +16,13 @@ data_frame$PostedMonths <- (as.integer(format(data_frame$PostedDate, "%Y")) - 20
 data_frame$Brand.model <-paste0(data_frame$Brand,"-",data_frame$model)
 
 
-#After Visualization Step:
+#After some visualization, we label encode data
+encoded_data <- data_frame
+for (col in names(encoded_data)) if (!is.numeric(encoded_data[[col]])) encoded_data[[col]] <- as.numeric(as.factor(encoded_data[[col]]))
+encoded_data <- subset(encoded_data, select = -c(Year, PostedDate, AdditionInfo, PostedYear))
+
+
+#After Completing Visualization Step:
 #We apply log transormation on km per Year and Ask Price
 encoded_data$LogkmPerYear = log(encoded_data$kmPerYear)
 encoded_data$LogAskPrice = log(encoded_data$AskPrice)
