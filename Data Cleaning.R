@@ -22,6 +22,9 @@ data_frame$PostedYear <- as.integer(format(data_frame$PostedDate, "%Y"))
 unique(data_frame$Year + data_frame$Age == data_frame$PostedYear)
 data_frame$Age = (data_frame$PostedYear - data_frame$Year)
 
+
+#تست
+
 #Checking nominal values
 unique(data_frame$Brand)
 unique(data_frame$kmDriven)
