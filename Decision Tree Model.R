@@ -4,7 +4,7 @@ library(rpart.plot)
 library(caret)
 
 # Load feature-engineered data (already processed as per Feature Engineering script)
-data <- read.csv("G:/org/gittest/Car_Price_Prediction_by_R/feature_extraction_data.csv", stringsAsFactors = TRUE)
+data <- read.csv("feature_extraction_data.csv", stringsAsFactors = TRUE)
 
 # Check for the required column: LogAskPrice
 if (!"LogAskPrice" %in% colnames(data)) {
