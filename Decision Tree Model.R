@@ -4,7 +4,12 @@ library(rpart.plot)
 library(caret)
 
 # Load feature-engineered data (already processed as per Feature Engineering script)
-data <- read.csv("G:/org/gittest/Car_Price_Prediction_by_R/feature_extraction_data.csv", stringsAsFactors = TRUE)
+data <- read.csv("feature_extraction_data.csv", stringsAsFactors = TRUE)
+
+# Check for the required column: LogAskPrice
+if (!"LogAskPrice" %in% colnames(data)) {
+  stop("Target variable 'LogAskPrice' is missing from the dataset.")
+}
 
 # Split data into training and testing sets
 set.seed(123)
@@ -18,7 +23,7 @@ tuned_params <- train(
   data = train_data, 
   method = "rpart",
   trControl = trainControl(method = "cv", number = 5), # 5-fold cross-validation
-  tuneGrid = expand.grid(cp = seq(0.001, 0.02, by = 0.001))
+  tuneGrid = expand.grid(cp = seq(0.003, 0.03, by = 0.003))
 )
 
 # Use the best model parameters
@@ -28,7 +33,7 @@ dt_model <- rpart(LogAskPrice ~ .,
                   method = "anova",
                   control = rpart.control(
                     minsplit = 20,
-                    minbucket = 7,
+                    minbucket = 10,
                     maxdepth = 10,
                     cp = best_cp
                   ))
@@ -57,5 +62,12 @@ original_actual <- exp(test_data$LogAskPrice)
 
 # Calculate accuracy (percentage of predictions within 20% of actual values)
 accuracy <- mean(abs((original_actual - original_predictions) / original_actual) <= 0.20) * 100
-cat("Model Accuracy:", round(accuracy, 2), "%\n")
+cat("Model Accuracy (Test Data):", round(accuracy, 2), "%\n")
+
+# Evaluate accuracy on the entire dataset
+all_predictions <- predict(dt_model, newdata = data)
+original_all_predictions <- exp(all_predictions)
+original_all_actual <- exp(data$LogAskPrice)
+all_accuracy <- mean(abs((original_all_actual - original_all_predictions) / original_all_actual) <= 0.20) * 100
+cat("Model Accuracy (Entire Dataset):", round(all_accuracy, 2), "%\n")
 
