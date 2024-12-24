@@ -11,6 +11,11 @@ if (!"LogAskPrice" %in% colnames(data)) {
   stop("Target variable 'LogAskPrice' is missing from the dataset.")
 }
 
+# Check for the required column: LogAskPrice
+if (!"LogAskPrice" %in% colnames(data)) {
+  stop("Target variable 'LogAskPrice' is missing from the dataset.")
+}
+
 # Split data into training and testing sets
 set.seed(123)
 train_index <- sample(1:nrow(data), 0.7 * nrow(data))
